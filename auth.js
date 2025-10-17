@@ -33,5 +33,36 @@ module.exports.verify = (req, res, next) => {
 	});
 };
 
+// Verify Admin
+module.exports.verifyAdmin = (req, res, next) => {
+
+	if(req.user.isAdmin){
+		next();
+	} else {
+
+		return res.status(403).send({
+			auth: "Failed",
+			message: "Action Forbidden"
+		});
+	};
+};
+
+module.exports.errorHandler = (err, req, res, next) => {
+
+	console.error(err);
+
+	const statusCode = err.status || 500;
+	const errorMessage = err.message || 'Internal Serverr Error';
+
+	res.status(statusCode).json({
+		error: {
+			message: errorMessage,
+			errorCode: err.code || 'SERVER_ERROR',
+			details: err.details || null
+		}
+	});
+};
+
+
 
 
